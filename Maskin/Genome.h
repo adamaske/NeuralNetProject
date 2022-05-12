@@ -2,10 +2,11 @@
 #include <vector>
 class NeuronLink;
 class Neuron;
+class NeuralNet;
 class Genome
 {
 public:
-	Genome();
+	Genome(NeuralNet* brain);
 	Genome(std::vector<NeuronLink*> links);
 	
 

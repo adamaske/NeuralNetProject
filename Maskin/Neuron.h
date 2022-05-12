@@ -8,7 +8,7 @@ public:
 	//What type is this
 	NeuronType mType = Input;
 	std::vector<NeuronLink*> mLinks;
-
+	void GetLink(NeuronLink* link);
 	virtual float Output();
 };
 

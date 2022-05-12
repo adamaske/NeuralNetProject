@@ -34,12 +34,13 @@ int main(int argc, char* args[])
     //Generations
     int mGenerations = 20;
     int mStepsInGeneration = 100;
-
+    float geneAmount = 5;
+    float internalSize = 1;
     //Create entites
     std::vector<Entity*> entities;
     for (size_t i = 0; i < 50; i++)
     {
-        Entity* e = new Entity(rand() % HEIGHT, rand() % WIDTH);
+        Entity* e = new Entity(rand() % HEIGHT, rand() % WIDTH, geneAmount, internalSize);
         entities.push_back(e);
     }
 
@@ -63,14 +64,22 @@ int main(int argc, char* args[])
         }
 
         for (int i = 0; i < mGenerations; i++) {
-
+            std::vector<Entity*> newEntites;
+            //Do reproduction every generation
+            //Check every entity for reproduction
+            for (size_t i = 0; i < entities.size(); i++)
+            {
+                //If they reproduced
+                Entity* e = entities[i]->Reproduce();
+                if (e) {
+                    newEntites.push_back(e);
+                }
+            }
 
             for (int j = 0; j < mStepsInGeneration; j++) {
-                //Do step
                 for (size_t i = 0; i < entities.size(); i++)
                 {
-                    //If they reproduced
-
+                    entities[i]->Update();
                 }
                 //Calls draw function
                 Draw(mRenderTarget, entities);
@@ -100,7 +109,11 @@ void Draw(SDL_Renderer* renderer, std::vector<Entity*> entities)
     // Now we can draw our point
     for (size_t i = 0; i < entities.size(); i++)
     {
+        //Set color to entites color
+        SDL_SetRenderDrawColor(renderer, entities[i]->r, entities[i]->g, entities[i]->b, 0xFF);
+        //Draw point with color at entity posistion
         SDL_RenderDrawPoint(renderer, entities[i]->mX, entities[i]->mY);
+
     }
 
     // Set the color to what was before

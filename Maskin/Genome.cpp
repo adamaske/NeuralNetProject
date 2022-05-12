@@ -1,9 +1,10 @@
 #include "Genome.h"
 #include "NeuronLink.h"
 #include "Neuron.h"
-Genome::Genome()
+#include "NeuralNet.h"
+Genome::Genome(NeuralNet* brain)
 {
-	
+	CreateRandomLinks(brain->mAllNeurons);
 }
 Genome::Genome(std::vector<NeuronLink*> links)
 {
@@ -14,6 +15,7 @@ void Genome::CreateRandomLinks(std::vector<Neuron*> neurons)
 	//Go trough all neurons
 	for (size_t i = 0; i < neurons.size(); i++)
 	{
+		//Creates one from each
 		//Check that this is not an output neuron
 		if (neurons[i]->mType != NeuronType::Output) {
 			//Should i create a link from this
@@ -25,7 +27,7 @@ void Genome::CreateRandomLinks(std::vector<Neuron*> neurons)
 				//To node
 				Neuron* last = neurons[rand() % neurons.size() - 1];
 				//Inits link
-				neuronLink = new NeuronLink(first, last, 1);
+				neuronLink = new NeuronLink(first, last, 0.2f);
 				mLinks.push_back(neuronLink);
 			}
 		}

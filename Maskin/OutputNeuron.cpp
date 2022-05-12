@@ -1,8 +1,10 @@
 #include "OutputNeuron.h"
 #include "NeuronLink.h"
-OutputNeuron::OutputNeuron()
+#include "Action.h"
+OutputNeuron::OutputNeuron(Action* action)
 {
 	mType = NeuronType::Output;
+	mAction = action;
 }
 
 float OutputNeuron::Output()
