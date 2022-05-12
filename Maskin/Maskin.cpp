@@ -31,6 +31,10 @@ int main(int argc, char* args[])
     bool isRunning = true;
     SDL_Event ev;
 
+    //Generations
+    int mGenerations = 20;
+    int mStepsInGeneration = 100;
+
     //Create entites
     std::vector<Entity*> entities;
     for (size_t i = 0; i < 50; i++)
@@ -58,9 +62,21 @@ int main(int argc, char* args[])
             }
         }
 
+        for (int i = 0; i < mGenerations; i++) {
 
-        //Calls draw function
-        Draw(mRenderTarget, entities);
+
+            for (int j = 0; j < mStepsInGeneration; j++) {
+                //Do step
+                for (size_t i = 0; i < entities.size(); i++)
+                {
+                    //If they reproduced
+
+                }
+                //Calls draw function
+                Draw(mRenderTarget, entities);
+            }
+        }
+       
         
     }
 
