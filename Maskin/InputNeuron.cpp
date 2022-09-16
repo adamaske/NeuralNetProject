@@ -5,7 +5,13 @@ InputNeuron::InputNeuron()
 	mType = NeuronType::Input;
 }
 
+InputNeuron::InputNeuron(Entity* entity)
+{
+	mEntity = entity;
+}
+
 float InputNeuron::Output()
 {
-	return mPower;
+	//Calculate some info here
+	return 0;
 }

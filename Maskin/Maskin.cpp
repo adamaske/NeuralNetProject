@@ -6,6 +6,9 @@
 #include <unordered_map>
 #include <vector>
 #include "Entity.h"
+#include <string>
+#include <chrono>
+#include <thread>
 #define HEIGHT 800
 #define WIDTH 600
 void QuitApp(SDL_Window* window, SDL_Renderer* renderer);
@@ -28,24 +31,24 @@ int main(int argc, char* args[])
         return 0;
     }
     
-    bool isRunning = true;
+    
     SDL_Event ev;
 
     //Generations
-    int mGenerations = 20;
-    int mStepsInGeneration = 100;
+    int mGenerations = 2;
+    int mStepsInGeneration = 2;
     float geneAmount = 5;
     float internalSize = 1;
     //Create entites
     std::vector<Entity*> entities;
-    for (size_t i = 0; i < 50; i++)
+    for (size_t i = 0; i < 10; i++)
     {
-        Entity* e = new Entity(rand() % HEIGHT, rand() % WIDTH, geneAmount, internalSize);
+        //
+        Entity* e = new Entity(rand() % HEIGHT, rand() % WIDTH, geneAmount, internalSize, "Entity " + std::to_string(i));
         entities.push_back(e);
     }
-
+    bool isRunning = true;
     while (isRunning) {
-
         //Henter event som skjer
         while (SDL_PollEvent(&ev) != 0) {
             //Hvis det er av type KEYDOWn
@@ -57,36 +60,47 @@ int main(int argc, char* args[])
                     QuitApp(mWindow, mRenderTarget);
 
                     break;
-                }
-
-                
+                case SDLK_RIGHT:
+                    //Next step?
+                    break;
+                }               
             }
         }
 
         for (int i = 0; i < mGenerations; i++) {
+            //Is this the first generation?
+
             std::vector<Entity*> newEntites;
+            if (i == 0) {
+                newEntites = entities;
+            }
             //Do reproduction every generation
             //Check every entity for reproduction
             for (size_t i = 0; i < entities.size(); i++)
             {
                 //If they reproduced
-                Entity* e = entities[i]->Reproduce();
-                if (e) {
-                    newEntites.push_back(e);
+                if(entities[i]->Reproduced()){
+                    //newEntites.push_back(new Entity(rand() % HEIGHT, rand() % WIDTH, 0, 0, "Entity " + std::to_string(i)));
+                    newEntites.push_back(new Entity(entities[i]->mX, entities[i]->mY, 0, 0, "Entity " + std::to_string(i)));
                 }
             }
-
+            entities = newEntites;
             for (int j = 0; j < mStepsInGeneration; j++) {
                 for (size_t i = 0; i < entities.size(); i++)
                 {
+                    std::cout << "Started update of entity" << std::endl;
                     entities[i]->Update();
                 }
                 //Calls draw function
                 Draw(mRenderTarget, entities);
+                std::cout << "Finished step "<< j << " in Generation " << i << std::endl;
+                std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(1));
             }
+            std::cout << "Finished generation " << i << std::endl;
         }
-       
-        
+        //Exit simulation
+        isRunning = false;
+        Draw(mRenderTarget, entities);
     }
 
     QuitApp(mWindow, mRenderTarget);

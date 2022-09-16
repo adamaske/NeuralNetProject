@@ -1,5 +1,7 @@
 #include "Action.h"
 
-MoveForward::MoveForward()
+Action::Action()
 {
+	
 }
+

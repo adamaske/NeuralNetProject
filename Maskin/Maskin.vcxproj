@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Action.cpp" />
+    <ClCompile Include="DistanceFromTopRightNeuron.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Genome.cpp" />
     <ClCompile Include="InputNeuron.cpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Action.h" />
+    <ClInclude Include="DistanceFromTopRightNeuron.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Genome.h" />
     <ClInclude Include="Global.h" />

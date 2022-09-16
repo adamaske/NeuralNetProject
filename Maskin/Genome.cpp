@@ -4,7 +4,7 @@
 #include "NeuralNet.h"
 Genome::Genome(NeuralNet* brain)
 {
-	CreateRandomLinks(brain->mAllNeurons);
+	//CreateRandomLinks(brain->mAllNeurons);
 }
 Genome::Genome(std::vector<NeuronLink*> links)
 {
@@ -25,7 +25,7 @@ void Genome::CreateRandomLinks(std::vector<Neuron*> neurons)
 				//From node
 				Neuron* first = neurons[i];
 				//To node
-				Neuron* last = neurons[rand() % neurons.size() - 1];
+				Neuron* last = neurons[rand() % neurons.size()];
 				//Inits link
 				neuronLink = new NeuronLink(first, last, 0.2f);
 				mLinks.push_back(neuronLink);

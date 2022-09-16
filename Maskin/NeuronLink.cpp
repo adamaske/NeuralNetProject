@@ -2,11 +2,18 @@
 #include "Neuron.h"
 NeuronLink::NeuronLink(Neuron* a, Neuron* b, float weight)
 {
-	mFirst = a;
-	mLast = b;
+	mFrom = a;
+	mTo = b;
 	mWeight = weight;
 
 	//Adds this link to the last neuron in the link
-	mLast->GetLink(this);
+	mFrom->GetFromMeLink(this);
+	mTo->GetToMeLink(this);
+	
+}
 
+float NeuronLink::Output()
+{
+	
+	return 0.0f;
 }

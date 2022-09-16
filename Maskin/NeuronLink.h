@@ -5,9 +5,10 @@ class NeuronLink
 public:
 	NeuronLink(Neuron* a, Neuron* b, float weight);
 
-	Neuron* mFirst;
-	Neuron* mLast;
+	Neuron* mTo;
+	Neuron* mFrom;
 
 	float mWeight = 0;
+	float Output();
 };
 

@@ -4,13 +4,16 @@ class Neuron;
 class InputNeuron;
 class InternalNeuron;
 class OutputNeuron;
+class Entity;
 class NeuralNet
 {
 public:
-	NeuralNet();
+	NeuralNet(Entity* entity);
 	std::vector<Neuron*> mAllNeurons;
 	std::vector<InputNeuron*> mInputNeurons;
 	std::vector<InternalNeuron*> mInternalNeurons;
-	std::vector<OutputNeuron*> mActionNeurons;
+	std::vector<OutputNeuron*> mOutputNeurons;
+
+	Entity* mEntity;
 };
 
