@@ -13,6 +13,7 @@
 #define WIDTH 600
 void QuitApp(SDL_Window* window, SDL_Renderer* renderer);
 void Draw(SDL_Renderer* renderer, std::vector<Entity*> entities);
+void Wait(std::chrono::milliseconds amount);
 int main(int argc, char* args[])
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -35,12 +36,13 @@ int main(int argc, char* args[])
     SDL_Event ev;
 
     //Generations
-    int mGenerations = 2;
-    int mStepsInGeneration = 2;
+    int mGenerations = 5;
+    int mStepsInGeneration = 10;
     float geneAmount = 5;
     float internalSize = 1;
     //Create entites
     std::vector<Entity*> entities;
+    int entityAmount = 10;
     for (size_t i = 0; i < 10; i++)
     {
         //
@@ -68,33 +70,38 @@ int main(int argc, char* args[])
         }
 
         for (int i = 0; i < mGenerations; i++) {
-            //Is this the first generation?
-
-            std::vector<Entity*> newEntites;
-            if (i == 0) {
-                newEntites = entities;
-            }
-            //Do reproduction every generation
-            //Check every entity for reproduction
-            for (size_t i = 0; i < entities.size(); i++)
-            {
-                //If they reproduced
-                if(entities[i]->Reproduced()){
-                    //newEntites.push_back(new Entity(rand() % HEIGHT, rand() % WIDTH, 0, 0, "Entity " + std::to_string(i)));
-                    newEntites.push_back(new Entity(entities[i]->mX, entities[i]->mY, 0, 0, "Entity " + std::to_string(i)));
-                }
-            }
-            entities = newEntites;
-            for (int j = 0; j < mStepsInGeneration; j++) {
+            //Is this the first generation? Dont generate new entites if its the first generation         
+            if (i != 0) {
+                std::vector<Entity*> newEntites;
+                //Do reproduction every generation
+                //Check every entity for reproduction
                 for (size_t i = 0; i < entities.size(); i++)
                 {
+                    //If they reproduced
+                    if (entities[i]->Reproduced()) {
+                        //newEntites.push_back(new Entity(rand() % HEIGHT, rand() % WIDTH, 0, 0, "Entity " + std::to_string(i)));
+                        newEntites.push_back(new Entity(entities[i]->mX, entities[i]->mY, 0, 0, "Entity " + std::to_string(i)));
+                    }
+                }
+
+                //Refill enities with missing amount
+                entities = newEntites;
+                int remainingEntites = entityAmount - entities.size();
+                for (int j = 0; j < remainingEntites; j++) {
+                    entities.push_back(new Entity(rand() % HEIGHT, rand() % WIDTH, geneAmount, internalSize, "Entity " + std::to_string(i)));
+                }
+            }
+            
+            for (int j = 0; j < mStepsInGeneration; j++) {
+                for (size_t k = 0; k < entities.size(); k++)
+                {
                     std::cout << "Started update of entity" << std::endl;
-                    entities[i]->Update();
+                    entities[k]->Update();
                 }
                 //Calls draw function
                 Draw(mRenderTarget, entities);
                 std::cout << "Finished step "<< j << " in Generation " << i << std::endl;
-                std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::seconds(1));
+                Wait(std::chrono::milliseconds(300));
             }
             std::cout << "Finished generation " << i << std::endl;
         }
@@ -127,7 +134,14 @@ void Draw(SDL_Renderer* renderer, std::vector<Entity*> entities)
         SDL_SetRenderDrawColor(renderer, entities[i]->r, entities[i]->g, entities[i]->b, 0xFF);
         //Draw point with color at entity posistion
         SDL_RenderDrawPoint(renderer, entities[i]->mX, entities[i]->mY);
-
+        SDL_RenderDrawPoint(renderer, entities[i]->mX+1, entities[i]->mY);
+        SDL_RenderDrawPoint(renderer, entities[i]->mX-1, entities[i]->mY);
+        SDL_RenderDrawPoint(renderer, entities[i]->mX+1, entities[i]->mY-1);
+        SDL_RenderDrawPoint(renderer, entities[i]->mX-1, entities[i]->mY+1);
+        SDL_RenderDrawPoint(renderer, entities[i]->mX+1, entities[i]->mY+1);
+        SDL_RenderDrawPoint(renderer, entities[i]->mX-1, entities[i]->mY-1);
+        SDL_RenderDrawPoint(renderer, entities[i]->mX, entities[i]->mY+1);
+        SDL_RenderDrawPoint(renderer, entities[i]->mX, entities[i]->mY-1);
     }
 
     // Set the color to what was before
@@ -135,4 +149,9 @@ void Draw(SDL_Renderer* renderer, std::vector<Entity*> entities)
     // .. you could do some other drawing here
     // And now we present everything we draw after the clear.
     SDL_RenderPresent(renderer);
+}
+
+void Wait(std::chrono::milliseconds amount)
+{
+    std::this_thread::sleep_until(std::chrono::system_clock::now() + amount);
 }
